@@ -1,0 +1,20 @@
+{
+    "joins" :[
+        {
+            "table_1": "table_name",
+            "table_2": "table_name",
+            "column_1": "column_name_of_table_1",
+            "column_2": "column_name_of_table_2",
+            "column_1_relation": "one/many",
+            "column_2_relation": "one/many"
+        }
+    ],
+    "outliers":{
+        "column_1": {
+            "isOutlier": "false/true",
+            "outlier_values": ["value_1", "value_2"],
+            "valid_min_value": "MIN_NUMBER",
+            "valid_max_value": "MAX_NUMBER"
+        }
+    }
+}

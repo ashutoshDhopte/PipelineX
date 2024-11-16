@@ -1,0 +1,10 @@
+Objectives:
+
+1. Datatypes (1 API call for all tables)    (Input+Output)
+2. Joins (1 API call for all tables)    (Input+Output)
+3. Data cleaning
+    a. data type enforcement (in-place)
+    b. replace missing value with "unknown" for categorical or mean for quantitaive
+    c. replace outliers with point b values
+4. create meta data and final csv files, and save in RDS and S3 resp.
+5. 

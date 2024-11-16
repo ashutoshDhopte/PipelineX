@@ -1,0 +1,16 @@
+[
+    {
+        "table_1": "table_name",
+        "table_2": "table_name",
+        "column_1": "column_name_of_table_1",
+        "column_2": "column_name_of_table_2",
+        "plot_type": "bar/chart/pie/etc."
+    },
+    {
+        "table_1": "table_name",
+        "table_2": "table_name",
+        "column_1": "column_name_of_table_1",
+        "column_2": "column_name_of_table_2",
+        "plot_type": "bar/chart/pie/etc."
+    }
+]

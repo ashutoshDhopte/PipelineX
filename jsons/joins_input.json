@@ -1,0 +1,12 @@
+{
+    "table_name_1": [
+        {
+            "column_name_1": {
+                "isIdentifier" : "true/false",
+                "values" : ["val1", "val2", "val3", "val4", "val5"],
+                "min_value": "MIN NUMBER",
+                "max_value": "MAX NUMBER"
+            }
+        }
+    ]
+}

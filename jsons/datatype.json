@@ -1,0 +1,14 @@
+{
+    "table_name_1": [
+        {
+            "column_name_1": {
+                "datatype": "value",
+                "description": "short description",
+                "isIdentifier": true,
+                "isCategorical": "true/false, eg. age is not catgorical but offer_type is",
+                "isDate": "false/true",
+                "dateFormat": "format, eg. YYYYMMDD, MMDDYYYY, MM-DD-YYYY"
+            }
+        }
+    ]
+}

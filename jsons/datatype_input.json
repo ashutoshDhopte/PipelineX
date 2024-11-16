@@ -1,0 +1,11 @@
+{
+    "table_name_1": [
+        {
+            "number_of_rows" : "rows",
+            "column_name_1": {
+                "unique_count" : "value",
+                "value" : "any_value"
+            }
+        }
+    ]
+}
