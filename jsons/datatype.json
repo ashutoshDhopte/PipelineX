@@ -7,7 +7,9 @@
                 "isIdentifier": true,
                 "isCategorical": "true/false, eg. age is not catgorical but offer_type is",
                 "isDate": "false/true",
-                "dateFormat": "format, eg. YYYYMMDD, MMDDYYYY, MM-DD-YYYY"
+                "dateFormat": "format, eg. YYYYMMDD, MMDDYYYY, MM-DD-YYYY",
+                "isArray": "true/false",
+                "isJson": "true/false"
             }
         }
     ]

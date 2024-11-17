@@ -12,6 +12,7 @@
     "outliers":{
         "column_1": {
             "isOutlier": "false/true",
+            "outlier_reason": "small sentence",
             "outlier_values": ["value_1", "value_2"],
             "valid_min_value": "MIN_NUMBER",
             "valid_max_value": "MAX_NUMBER"

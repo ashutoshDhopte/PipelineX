@@ -3,7 +3,16 @@
         {
             "column_name_1": {
                 "isIdentifier" : "true/false",
-                "values" : ["val1", "val2", "val3", "val4", "val5"],
+                "values" : [
+                    {
+                        "value": "value1",
+                        "occurence": "number of occurenes of the value1"
+                    },
+                    {
+                        "value": "value2",
+                        "occurence": "number of occurenes of the value2"
+                    }
+                ],
                 "min_value": "MIN NUMBER",
                 "max_value": "MAX NUMBER"
             }

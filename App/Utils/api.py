@@ -106,7 +106,8 @@ def getDataTypes(input_json):
     some_content = f"""
         {input_json}
 
-        Above is the json data of the mulitple tables, 'number_of_rows' which is not a column, rest of the key are columns and values of their first row. Analyze the data and give the output in the form of following format.
+        Above is the json data of the mulitple tables, 'number_of_rows' which is not a column, rest of the key are columns and values of their first row. 
+        Analyze the data and give the output in the form of following format.
         And only give the output json, no other sentences and explainations, such that I can parse the output directly using json.dumps.
     
     """
@@ -118,12 +119,14 @@ def getDataTypes(input_json):
             'table_name_1': [
                 {
                     'column_name_1': {
-                        'datatype': 'value',
+                        'datatype': 'dataType, eg. int, float, string, etc.',
                         'description': 'short description',
                         'isIdentifier': true,
                         'isCategorical': 'true/false, eg. age is not catgorical but offer_type is',
                         'isDate': 'false/true',
-                        'dateFormat': 'format, eg. YYYYMMDD, MMDDYYYY, MM-DD-YYYY'
+                        'dateFormat': 'format, eg. YYYYMMDD, MMDDYYYY, MM-DD-YYYY',
+                        'isArray': 'true/false',
+                        'isJson': 'true/false
                     }
                 }
             ]
@@ -190,6 +193,7 @@ def getJoins(input_json):
             'outliers':{
                 'column_1': {
                     'isOutlier': 'false/true',
+                    'outlier_reason': 'small sentence',
                     'outlier_values': ['value_1', 'value_2'],
                     'valid_min_value': 'MIN_NUMBER',
                     'valid_max_value': 'MAX_NUMBER'

@@ -62,7 +62,7 @@ def get_joins_input_json(files_dict, data_type_dict):
         table_output = []
 
         for column, column_properties in table_schema[0].items():
-            column_data = df[column].dropna().unique()  # Get unique non-NaN values
+            column_data = df[column].dropna()  # Get unique non-NaN values
 
             column_output = {
                 "isIdentifier": column_properties["isIdentifier"],
@@ -73,22 +73,38 @@ def get_joins_input_json(files_dict, data_type_dict):
 
             # If the column is an identifier
             if column_properties["isIdentifier"]:
-                column_output["values"] = list(
-                    column_data[:5]
-                )  # Take any 5 unique values
+                column_output["values"] = [
+                    {
+                        "value": value,
+                        "occurrence": int(column_data[column_data == value].count())
+                    }
+                    for value in column_data.unique()[:5]
+                ] # Take any 5 unique values
 
-            # If the column is categorical but not an identifier
-            elif column_properties["isCategorical"]:
-                column_output["values"] = list(column_data)
+            elif not column_properties["isArray"] and not column_properties["isJson"]:
 
-            # Otherwise, take any 5 unique values
-            else:
-                column_output["values"] = list(column_data[:5])
+                # If the column is categorical but not an identifier
+                if column_properties["isCategorical"]:
+                    column_output["values"] = [
+                        {
+                            "value": value,
+                            "occurrence": int(column_data[column_data == value].count())
+                        }
+                        for value in column_data.unique()
+                    ]
+
+                # Otherwise, take any 5 unique values
+                else:
+                    column_output["values"] = [
+                        {
+                            "value": value,
+                            "occurrence": int(column_data[column_data == value].count())
+                        }
+                        for value in column_data.unique()[:5]
+                    ]
 
             # If the column is numerical and not an identifier
-            if not column_properties["isIdentifier"] and column_properties[
-                "datatype"
-            ].lower() in ["float", "double", "integer", "int"]:
+            if not column_properties["isIdentifier"] and column_properties["datatype"].lower() in ["float", "double", "integer", "int"]:
                 column_output["min_value"] = column_data.min()
                 column_output["max_value"] = column_data.max()
 
