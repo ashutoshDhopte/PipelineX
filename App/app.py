@@ -1,5 +1,5 @@
 import streamlit as st
-from Utils import file_upload, api, data_profiling
+from Utils import file_upload, api, data_profiling, aws_store
 import json
 import pandas as pd
 
@@ -79,4 +79,6 @@ if uploaded_files:
 
     metadata = data_profiling.createMetadata(dataTypeJson, joinJson, files_dict, uploaded_files)
 
-    st.write(metadata)
+    metadataTable = aws_store.storeMetadataOnRDS(metadata)
+
+    st.write(metadataTable)
