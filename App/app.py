@@ -1,27 +1,32 @@
 import streamlit as st
+from Utils import file_upload
+import json
 
 # Title for the app
-st.title("File Upload Application")
+st.title("Multiple File Upload and Processing Application")
 
 # Description or instructions
 st.write("Upload your files here, and we will process them!")
 
-# File uploader
-uploaded_file = st.file_uploader(
-    "Choose a file", type=["txt", "csv", "xlsx", "png", "jpg", "pdf"]
+# File uploader (allow multiple file uploads)
+uploaded_files = st.file_uploader(
+    "Choose files", type=["csv", "xlsx", "json"], accept_multiple_files=True
 )
 
-# Handle uploaded file
-if uploaded_file is not None:
-    # Display file details
-    st.write("File uploaded successfully!")
-    st.write(f"**Filename:** {uploaded_file.name}")
-    st.write(f"**File type:** {uploaded_file.type}")
-    st.write(f"**File size:** {uploaded_file.size} bytes")
+# Handle uploaded files
+if uploaded_files:
+    # Process the files to generate JSON
+    result_json = file_upload.process_files_to_json(uploaded_files)
 
-    # Display additional message or handle the file
-    st.write("We'll process this file in the next steps.")
+    # Display the JSON result in the app
+    st.write("Generated JSON:")
+    st.json(result_json)
 
-# Footer or additional info
-st.write("---")
-st.write("This is a simple file upload interface built with Streamlit!")
+    # # Optionally, download the JSON
+    # json_string = json.dumps(result_json, indent=4)
+    # st.download_button(
+    #     label="Download JSON",
+    #     data=json_string,
+    #     file_name="result.json",
+    #     mime="application/json",
+    # )
