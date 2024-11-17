@@ -1,5 +1,5 @@
 import streamlit as st
-from Utils import file_upload, api
+from Utils import file_upload, api, data_profiling
 import json
 import pandas as pd
 
@@ -42,20 +42,31 @@ if uploaded_files:
     # Process the files to generate JSON
     result_json = file_upload.get_datatype_input_json(files_dict)
 
-    st.write("Data Type Request")
-    st.write(result_json)
+    # st.write("Data Type Request")
+    # st.write(result_json)
 
     datatypesResponse = api.getDataTypes(result_json)
-
     dataTypeJson = json.loads(datatypesResponse.strip("```json").strip("```"))
+
+    newColumnAdded = data_profiling.expandObjectValuesToColumns(files_dict, dataTypeJson)
+
+    if newColumnAdded:
+        # Process the files to generate JSON
+        result_json = file_upload.get_datatype_input_json(files_dict)
+
+        # st.write("Data Type Request")
+        # st.write(result_json)
+
+        datatypesResponse = api.getDataTypes(result_json)
+        dataTypeJson = json.loads(datatypesResponse.strip("```json").strip("```"))
 
     st.write("Data Type Response")
     st.write(dataTypeJson)
 
     joinsInputJson = file_upload.get_joins_input_json(files_dict, dataTypeJson)
 
-    st.write("Join Request")
-    st.write(joinsInputJson)
+    # st.write("Join Request")
+    # st.write(joinsInputJson)
 
     joinsResponse = api.getJoins(joinsInputJson)
     joinsJson = json.loads(joinsResponse.strip("```json").strip("```"))

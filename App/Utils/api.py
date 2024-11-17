@@ -170,6 +170,7 @@ def getJoins(input_json):
         It also has MIN_VALUE and MAX_VALUE, which will be only for the columns which are not identifier and is integer.
         So, for the integer columns, based on the column and the min-max values, you have to find the OUTLIERS.
         And for the string columns, based on the columns and values, you have to find the OUTLIERS within them.
+        The Outliers should only be mentioned if they seems serious, moderate outliers are okay.
         And the main thing, find the JOIN relation between these tables and columns, in the following JSON format.
 
         And only give the output json, no other sentences and explainations, such that I can parse the output directly using json.dumps.
