@@ -89,6 +89,8 @@ if uploaded_files:
 
     st.write(metadataTable)
 
+    data_profiling.cleanData(dataTypeJson, files_dict)
+
     fileNames = []
 
     for tableName, df in files_dict.items():
