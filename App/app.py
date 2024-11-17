@@ -42,9 +42,6 @@ if uploaded_files:
     # Process the files to generate JSON
     result_json = file_upload.get_datatype_input_json(files_dict)
 
-    # st.write("Data Type Request")
-    # st.write(result_json)
-
     datatypesResponse = api.getDataTypes(result_json)
     dataTypeJson = json.loads(datatypesResponse.strip("```json").strip("```"))
 
@@ -54,25 +51,25 @@ if uploaded_files:
         # Process the files to generate JSON
         result_json = file_upload.get_datatype_input_json(files_dict)
 
-        # st.write("Data Type Request")
-        # st.write(result_json)
-
         datatypesResponse = api.getDataTypes(result_json)
         dataTypeJson = json.loads(datatypesResponse.strip("```json").strip("```"))
+
+    # st.write("Data Type Request")
+    # st.write(result_json)
 
     # st.write("Data Type Response")
     # st.write(dataTypeJson)
 
     joinsInputJson = file_upload.get_joins_input_json(files_dict, dataTypeJson)
 
-    # st.write("Join Request")
-    # st.write(joinsInputJson)
+    st.write("Join Request")
+    st.write(joinsInputJson)
 
     joinsResponse = api.getJoins(joinsInputJson)
     joinJson = json.loads(joinsResponse.strip("```json").strip("```"))
 
-    # st.write("Join Response")
-    # st.write(joinJson)
+    st.write("Join Response")
+    st.write(joinJson)
 
     plotResponse = api.getPlots(dataTypeJson, joinJson)
     plotJson = json.loads(plotResponse.strip("```json").strip("```"))

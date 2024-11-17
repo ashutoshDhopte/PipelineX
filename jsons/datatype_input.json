@@ -1,11 +1,11 @@
 {
-    "table_name_1": [
-        {
-            "number_of_rows" : "rows",
+    "table_name_1":{
+        "number_of_rows" : "rows",
+        "columns":{
             "column_name_1": {
                 "unique_count" : "value",
                 "value" : "any_one_row_with_all_values_present"
             }
         }
-    ]
+    }
 }

@@ -116,8 +116,9 @@ def getDataTypes(input_json):
         some_content
         + """
             {
-            'table_name_1': [
-                {
+            'table_name_1': {
+                'description': 'short description',
+                'columns': {
                     'column_name_1': {
                         'datatype': 'dataType, eg. int, float, string, etc.',
                         'description': 'short description',
@@ -129,7 +130,7 @@ def getDataTypes(input_json):
                         'isJson': 'true/false
                     }
                 }
-            ]
+            }
         }
         """
     )

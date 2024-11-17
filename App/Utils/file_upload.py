@@ -17,12 +17,13 @@ def get_datatype_input_json(files_dict):
         # Generate the JSON for this table
         table_json = {
             "number_of_rows": len(df),
+            "columns": {}
         }
 
         for column in df.columns:
             column_data = df[column].dropna()  # Drop NaN values to focus on valid data
             if not column_data.empty:
-                table_json[column] = {
+                table_json["columns"][column] = {
                     "unique_count": column_data.nunique(),
                     "value": (
                         column_data.iloc[0].item()
@@ -31,13 +32,13 @@ def get_datatype_input_json(files_dict):
                     ),
                 }
             else:
-                table_json[column] = {
+                table_json["columns"][column] = {
                     "unique_count": 0,
                     "value": None,
                 }
 
         # Add this table's JSON to the final output
-        output_json[table_name] = [table_json]
+        output_json[table_name] = table_json
 
     return output_json
 
@@ -59,9 +60,9 @@ def get_joins_input_json(files_dict, data_type_dict):
             continue  # Skip if the table schema is not found in dataTypeJson
 
         table_schema = data_type_dict[table_name]
-        table_output = []
+        table_output = {}
 
-        for column, column_properties in table_schema[0].items():
+        for column, column_properties in table_schema['columns'].items():
             column_data = df[column].dropna()  # Get unique non-NaN values
 
             column_output = {
@@ -109,7 +110,7 @@ def get_joins_input_json(files_dict, data_type_dict):
                 column_output["max_value"] = column_data.max()
 
             # Add the processed column output to the table output
-            table_output.append({column: column_output})
+            table_output[column] = column_output
 
         # Add the table output to the final output JSON
         output_json[table_name] = table_output

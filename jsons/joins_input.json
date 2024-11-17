@@ -1,21 +1,19 @@
 {
-    "table_name_1": [
-        {
-            "column_name_1": {
-                "isIdentifier" : "true/false",
-                "values" : [
-                    {
-                        "value": "value1",
-                        "occurence": "number of occurenes of the value1"
-                    },
-                    {
-                        "value": "value2",
-                        "occurence": "number of occurenes of the value2"
-                    }
-                ],
-                "min_value": "MIN NUMBER",
-                "max_value": "MAX NUMBER"
-            }
+    "table_name_1": {
+        "column_name_1": {
+            "isIdentifier" : "true/false",
+            "values" : [
+                {
+                    "value": "value1",
+                    "occurence": "number of occurenes of the value1"
+                },
+                {
+                    "value": "value2",
+                    "occurence": "number of occurenes of the value2"
+                }
+            ],
+            "min_value": "MIN NUMBER",
+            "max_value": "MAX NUMBER"
         }
-    ]
+    }
 }

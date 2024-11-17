@@ -1,6 +1,7 @@
 {
-    "table_name_1": [
-        {
+    "table_name_1": {
+        "description": "",
+        "columns": {
             "column_name_1": {
                 "datatype": "value",
                 "description": "short description",
@@ -12,5 +13,5 @@
                 "isJson": "true/false"
             }
         }
-    ]
+    }
 }
