@@ -1,5 +1,11 @@
 import psycopg2
 import json
+import boto3
+import os
+import zipfile
+from io import BytesIO
+
+bucket_name = 'saas-transformed-data'
 
 def get_db_connection():
     print('starting connection')
@@ -69,3 +75,43 @@ def storeMetadataOnRDS(metadata):
             print('connection not made')
 
     return metadataTable
+
+
+def downloadFilesFromS3():
+    # Initialize the S3 client
+    s3 = boto3.client('s3')
+    
+    # Initialize the zip file in memory
+    zip_buffer = BytesIO()
+    
+    # Create a zip file in memory
+    with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+        # List objects in the S3 bucket
+        paginator = s3.get_paginator('list_objects_v2')
+        page_iterator = paginator.paginate(Bucket=bucket_name)
+
+        # Loop through the pages of the S3 bucket and download the files
+        for page in page_iterator:
+            if 'Contents' in page:
+                for obj in page['Contents']:
+                    file_name = obj['Key']
+                    print(f"Downloading {file_name}...")
+
+                    # Download each file into memory (instead of to disk)
+                    file_obj = s3.get_object(Bucket=bucket_name, Key=file_name)
+                    file_data = file_obj['Body'].read()
+
+                    # Add file to the zip archive
+                    zip_file.writestr(file_name, file_data)
+
+    # Return the zip file in memory
+    zip_buffer.seek(0)  # Go to the beginning of the BytesIO buffer
+    return zip_buffer
+
+
+def putFilesToS3(fileNames):
+
+    s3 = boto3.Session().client('s3')
+
+    for fileName in fileNames:
+        s3.upload_file('/tmp/'+fileName, bucket_name, fileName)

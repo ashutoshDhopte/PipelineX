@@ -82,3 +82,11 @@ if uploaded_files:
     metadataTable = aws_store.storeMetadataOnRDS(metadata)
 
     st.write(metadataTable)
+
+    fileNames = []
+
+    for tableName, df in files_dict.items():
+        df.to_csv('/tmp/'+tableName+'-transformed.csv', index=False)
+        fileNames.append(tableName+'-transformed.csv')
+
+    aws_store.putFilesToS3(fileNames)
