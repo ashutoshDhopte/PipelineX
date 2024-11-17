@@ -41,8 +41,7 @@ def createMetadata(dataTypeJson, joinJson, files_dict, uploaded_files):
         'ROW_COUNT': {},
         'DESCRIPTION': {},
         'RELATIONSHIP': {},
-        'FILE_FORMAT': {},
-        'FILE_SIZE': {},
+        'FILE_INFO': {},
         'MISSING_OR_NULL_COUNT': {},
         'OUTLIERS': {},
         'STATISTICS': {},
@@ -57,8 +56,7 @@ def createMetadata(dataTypeJson, joinJson, files_dict, uploaded_files):
     # ROW_COUNT                    {portfolio:30, profile:1000, transcript:99899}
     # DESCRIPTION                 {portfolio:Description, profile:Description, transcript:Description}
     # RELATIONSHIP               [output from joins API]
-    # FILE_FORMAT                  {portfolio:csv, profile:csv, transcript:csv}
-    # FILE_SIZE                    {portfolio:0.2 mb, profile:3 mb, transcript:25 mb}
+    # FILE_INFO                  {portfolio:{format:csv, size:0.2mb}, ...}
     # MISSING_OR_NULL_COUNT          {portfolio:{column1:10, column3:5}, profile:{...}, ...}
     # OUTLIERS                    [output from joins API]
     # STATISTICS                  {portfolio:{column1:{mean:345, median:3445, mode:334, ...}, column3:{...}, ...}, profile:{...}, ...} //means, medians, modes, Standard deviations, ranges
@@ -67,20 +65,57 @@ def createMetadata(dataTypeJson, joinJson, files_dict, uploaded_files):
     # LINK                        link of the RDS on AWS
 
     metadata['RELATIONSHIP'] = joinJson['joins']
-    metadata['OUTLIERS'] = joinJson['outliers']
+    metadata['PURPOSE'] = dataTypeJson['purpose']
+    metadata['TARGET_AUDIENCE'] = dataTypeJson['targetAudience']
 
-    # for tableName, tableObj in dataTypeJson.items():
-        
-    #     metadata['TABLE_NAME'].append(tableName)
-    #     metadata['DESCRIPTION'][tableName] = tableObj['description']
+    #for file format and size
+    for file in uploaded_files:
+        # Get the file size in bytes
+        file_size_bytes = file.size
+        # Convert the file size to a readable format
+        if file_size_bytes < 1024:
+            file_size_str = f"{file_size_bytes} B"
+        elif file_size_bytes < 1024 * 1024:
+            file_size_kb = file_size_bytes / 1024
+            file_size_str = f"{file_size_kb:.2f} KB"
+        else:
+            file_size_mb = file_size_bytes / (1024 * 1024)
+            file_size_str = f"{file_size_mb:.2f} MB"
+        # Add file size to metadata
+        tableName = file.name.split(".")[0]
+        metadata['FILE_INFO'][tableName] = {
+            'format': file.type,
+            'size': file_size_str
+        } 
 
-    #     if tableName in files_dict:
-    #         metadata['ROW_COUNT'][tableName] = files_dict[tableName].shape[0]
+    #for table level info 
+    for tableName, tableObj in dataTypeJson['tables'].items():
+        metadata['TABLE_NAME'].append(tableName)
+        metadata['DESCRIPTION'][tableName] = tableObj['description']
+        if tableName in files_dict:
+            metadata['ROW_COUNT'][tableName] = files_dict[tableName].shape[0]
 
+    #for data point level info
+    for tableName, df in files_dict.items():
+        null_or_blank_counts = df.apply(lambda x: x.isnull().sum() + (x == '').sum())
+        for columnName, count in null_or_blank_counts.items():
+            if count > 0:
+                if not tableName in metadata['MISSING_OR_NULL_COUNT']:
+                    metadata['MISSING_OR_NULL_COUNT'][tableName] = {}
+                metadata['MISSING_OR_NULL_COUNT'][tableName][columnName] = count
             
-    #     for columnName, obj in tableObj['columns'].items():
-            
-            
 
-    # for files in uploaded_files:
-    #     #for file format and size                
+    for tableName, colObj in joinJson['outliers'].items():
+        for colName, colProp in colObj.items():
+            if colProp['isOutlier']:
+                if not tableName in metadata['OUTLIERS']:
+                    metadata['OUTLIERS'][tableName] = {}
+                metadata['OUTLIERS'][tableName][colName] = {}
+                metadata['OUTLIERS'][tableName][colName]['outlier_reason'] = colProp['outlier_reason']
+                metadata['OUTLIERS'][tableName][colName]['outlier_values'] = colProp['outlier_values']
+                metadata['OUTLIERS'][tableName][colName]['valid_min_value'] = colProp['valid_min_value']
+                metadata['OUTLIERS'][tableName][colName]['valid_max_value'] = colProp['valid_max_value']
+
+    return metadata
+
+                    

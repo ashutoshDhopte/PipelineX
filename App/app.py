@@ -62,17 +62,21 @@ if uploaded_files:
 
     joinsInputJson = file_upload.get_joins_input_json(files_dict, dataTypeJson)
 
-    st.write("Join Request")
-    st.write(joinsInputJson)
+    # st.write("Join Request")
+    # st.write(joinsInputJson)
 
-    # joinsResponse = api.getJoins(joinsInputJson)
-    # joinJson = json.loads(joinsResponse.strip("```json").strip("```"))
+    joinsResponse = api.getJoins(joinsInputJson)
+    joinJson = json.loads(joinsResponse.strip("```json").strip("```"))
 
     # st.write("Join Response")
     # st.write(joinJson)
 
-    # plotResponse = api.getPlots(dataTypeJson, joinJson)
-    # plotJson = json.loads(plotResponse.strip("```json").strip("```"))
+    plotResponse = api.getPlots(dataTypeJson, joinJson)
+    plotJson = json.loads(plotResponse.strip("```json").strip("```"))
 
     # st.write("Plot Response")
     # st.write(plotJson)
+
+    metadata = data_profiling.createMetadata(dataTypeJson, joinJson, files_dict, uploaded_files)
+
+    st.write(metadata)
