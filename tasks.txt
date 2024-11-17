@@ -11,7 +11,7 @@ Objectives:
 6. Json keys to columns -- done
 
 
-Meta data structure:
+Meta data structure: -- 9 out of 11 done
 
 RDS:
 ATTRIBUTE                    VALUE
@@ -19,8 +19,7 @@ TABLE_NAME                  [portfolio, profile, transcript]
 ROW_COUNT                    {portfolio:30, profile:1000, transcript:99899}
 DESCRIPTION                 {portfolio:Description, profile:Description, transcript:Description}
 RELATIONSHIP               [output from joins API]
-FILE_FORMAT                  {portfolio:csv, profile:csv, transcript:csv}
-FILE_SIZE                    {portfolio:0.2 mb, profile:3 mb, transcript:25 mb}
+FILE_INFO                  {portfolio:{format:csv, size:0.2mb}, ...}
 MISSING_OR_NULL_COUNT          {portfolio:{column1:10, column3:5}, profile:{...}, ...}
 OUTLIERS                    [output from joins API]
 STATISTICS                  {portfolio:{column1:{mean:345, median:3445, mode:334, ...}, column3:{...}, ...}, profile:{...}, ...} //means, medians, modes, Standard deviations, ranges
