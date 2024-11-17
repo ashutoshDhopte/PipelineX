@@ -1,76 +1,15 @@
 import pandas as pd
+import json
 
 
-def process_files_to_json(uploaded_files):
-    """
-    Process uploaded files and return the required JSON structure.
-    """
-    output_json = {}
-
-    for file in uploaded_files:
-        # Read the file into a Pandas DataFrame based on the file type
-        if file.type == "text/csv":
-            df = pd.read_csv(file)
-        elif (
-            file.type
-            == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        ):
-            df = pd.read_excel(file)
-        elif file.type == "application/json":
-            df = pd.read_json(file)
-        else:
-            continue  # Skip unsupported file types
-
-        # Extract table name from the file name (without extension)
-        table_name = file.name.split(".")[0]
-
-        # Generate the JSON for this table
-        table_json = {
-            "number_of_rows": len(df),
-        }
-
-        for column in df.columns:
-            column_data = df[column].dropna()  # Drop NaN values to focus on valid data
-            if not column_data.empty:
-                table_json[column] = {
-                    "unique_count": column_data.nunique(),
-                    "value": column_data.iloc[0],  # Take any one row with a value
-                }
-            else:
-                table_json[column] = {
-                    "unique_count": 0,
-                    "value": None,
-                }
-
-        # Add this table's JSON to the final output
-        output_json[table_name] = [table_json]
-
-    return output_json
-
-
-def process_files_to_json2(uploaded_files):
+def get_datatype_input_json(files_dict):
     """
     Process uploaded files and return the required JSON structure, skipping Unnamed columns
     and ensuring integer values are plain integers.
     """
     output_json = {}
 
-    for file in uploaded_files:
-        # Read the file into a Pandas DataFrame based on the file type
-        if file.type == "text/csv":
-            df = pd.read_csv(file)
-        elif (
-            file.type
-            == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        ):
-            df = pd.read_excel(file)
-        elif file.type == "application/json":
-            df = pd.read_json(file)
-        else:
-            continue  # Skip unsupported file types
-
-        # Extract table name from the file name (without extension)
-        table_name = file.name.split(".")[0]
+    for table_name, df in files_dict.items():
 
         # Filter out Unnamed columns
         df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
@@ -100,4 +39,64 @@ def process_files_to_json2(uploaded_files):
         # Add this table's JSON to the final output
         output_json[table_name] = [table_json]
 
+    return output_json
+
+
+def get_joins_input_json(files_dict, data_type_dict):
+    """
+    Process uploaded files and dataTypeJson to produce the desired output JSON structure.
+    """
+    # Parse the input dataTypeJson string into a Python dictionary
+    # data_type_dict = json.loads(data_type_json)
+
+    # Initialize the output JSON dictionary
+    output_json = {}
+
+    for table_name, df in files_dict.items():
+
+        # Get the table's schema from dataTypeJson
+        if table_name not in data_type_dict:
+            continue  # Skip if the table schema is not found in dataTypeJson
+
+        table_schema = data_type_dict[table_name]
+        table_output = []
+
+        for column, column_properties in table_schema[0].items():
+            column_data = df[column].dropna().unique()  # Get unique non-NaN values
+
+            column_output = {
+                "isIdentifier": column_properties["isIdentifier"],
+                "values": [],
+                "min_value": None,
+                "max_value": None,
+            }
+
+            # If the column is an identifier
+            if column_properties["isIdentifier"]:
+                column_output["values"] = list(
+                    column_data[:5]
+                )  # Take any 5 unique values
+
+            # If the column is categorical but not an identifier
+            elif column_properties["isCategorical"]:
+                column_output["values"] = list(column_data)
+
+            # Otherwise, take any 5 unique values
+            else:
+                column_output["values"] = list(column_data[:5])
+
+            # If the column is numerical and not an identifier
+            if not column_properties["isIdentifier"] and column_properties[
+                "datatype"
+            ].lower() in ["float", "double", "integer", "int"]:
+                column_output["min_value"] = column_data.min()
+                column_output["max_value"] = column_data.max()
+
+            # Add the processed column output to the table output
+            table_output.append({column: column_output})
+
+        # Add the table output to the final output JSON
+        output_json[table_name] = table_output
+
+    # Return the output JSON as a dictionary
     return output_json

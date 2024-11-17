@@ -106,7 +106,7 @@ def getDataTypes(input_json):
     some_content = f"""
         {input_json}
 
-        Above is the json data of the mulitple tables, 'number_of_rows' which is not a column, rest of key are columns and values of their first row. Analyze the data and give the output in the form of following format.
+        Above is the json data of the mulitple tables, 'number_of_rows' which is not a column, rest of the key are columns and values of their first row. Analyze the data and give the output in the form of following format.
         And only give the output json, no other sentences and explainations, such that I can parse the output directly using json.dumps.
     
     """
@@ -214,6 +214,7 @@ def getJoins(input_json):
         print(eval(json_str)["error"]["message"])
 
     return response.content
+
 
 # if __name__ == "__main__":
 #     getDataTypes()
