@@ -5,7 +5,7 @@ def expandObjectValuesToColumns(files_dict, dataTypeJson):
 
     newColumnAdded = False
 
-    for tableName, tableDict in dataTypeJson.items():
+    for tableName, tableDict in dataTypeJson['tables'].items():
         if tableName in files_dict:
             df = files_dict[tableName]
             for column, obj in tableDict['columns'].items():
@@ -34,7 +34,7 @@ def expandObjectValuesToColumns(files_dict, dataTypeJson):
     return newColumnAdded
 
 
-def createMetadata(dataTypeJson, joinJson, files_dict):
+def createMetadata(dataTypeJson, joinJson, files_dict, uploaded_files):
 
     metadata = {
         'TABLE_NAME': [],
@@ -52,6 +52,7 @@ def createMetadata(dataTypeJson, joinJson, files_dict):
     }
 
     # ATTRIBUTE                    VALUE
+
     # TABLE_NAME                  [portfolio, profile, transcript]
     # ROW_COUNT                    {portfolio:30, profile:1000, transcript:99899}
     # DESCRIPTION                 {portfolio:Description, profile:Description, transcript:Description}
@@ -65,12 +66,21 @@ def createMetadata(dataTypeJson, joinJson, files_dict):
     # TARGET_AUDIENCE              ______
     # LINK                        link of the RDS on AWS
 
-    # for tableName, colArr in dataTypeJson.items():
+    metadata['RELATIONSHIP'] = joinJson['joins']
+    metadata['OUTLIERS'] = joinJson['outliers']
+
+    # for tableName, tableObj in dataTypeJson.items():
         
     #     metadata['TABLE_NAME'].append(tableName)
+    #     metadata['DESCRIPTION'][tableName] = tableObj['description']
+
     #     if tableName in files_dict:
     #         metadata['ROW_COUNT'][tableName] = files_dict[tableName].shape[0]
+
             
-    #     for colObj in colArr:
-    #         for columnName, obj in colObj.items():
-                
+    #     for columnName, obj in tableObj['columns'].items():
+            
+            
+
+    # for files in uploaded_files:
+    #     #for file format and size                

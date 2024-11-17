@@ -65,14 +65,14 @@ if uploaded_files:
     st.write("Join Request")
     st.write(joinsInputJson)
 
-    joinsResponse = api.getJoins(joinsInputJson)
-    joinJson = json.loads(joinsResponse.strip("```json").strip("```"))
+    # joinsResponse = api.getJoins(joinsInputJson)
+    # joinJson = json.loads(joinsResponse.strip("```json").strip("```"))
 
-    st.write("Join Response")
-    st.write(joinJson)
+    # st.write("Join Response")
+    # st.write(joinJson)
 
-    plotResponse = api.getPlots(dataTypeJson, joinJson)
-    plotJson = json.loads(plotResponse.strip("```json").strip("```"))
+    # plotResponse = api.getPlots(dataTypeJson, joinJson)
+    # plotJson = json.loads(plotResponse.strip("```json").strip("```"))
 
-    st.write("Plot Response")
-    st.write(plotJson)
+    # st.write("Plot Response")
+    # st.write(plotJson)

@@ -47,8 +47,6 @@ def get_joins_input_json(files_dict, data_type_dict):
     """
     Process uploaded files and dataTypeJson to produce the desired output JSON structure.
     """
-    # Parse the input dataTypeJson string into a Python dictionary
-    # data_type_dict = json.loads(data_type_json)
 
     # Initialize the output JSON dictionary
     output_json = {}
@@ -56,10 +54,10 @@ def get_joins_input_json(files_dict, data_type_dict):
     for table_name, df in files_dict.items():
 
         # Get the table's schema from dataTypeJson
-        if table_name not in data_type_dict:
+        if table_name not in data_type_dict['tables']:
             continue  # Skip if the table schema is not found in dataTypeJson
 
-        table_schema = data_type_dict[table_name]
+        table_schema = data_type_dict['tables'][table_name]
         table_output = {}
 
         for column, column_properties in table_schema['columns'].items():
