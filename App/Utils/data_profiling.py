@@ -1,5 +1,6 @@
 import json
 import pandas as pd # type: ignore
+from dateutil import parser
 
 def expandObjectValuesToColumns(files_dict, dataTypeJson):
 
@@ -119,3 +120,53 @@ def createMetadata(dataTypeJson, joinJson, files_dict, uploaded_files):
     return metadata
 
                     
+def cleanData(dataTypeJson, files_dict):
+
+    for tableName, df in files_dict.items():
+        files_dict[tableName] = df.loc[:, ~df.columns.str.contains("^Unnamed")]
+
+    for tableName, df in files_dict.items():
+        if tableName in dataTypeJson['tables']:
+            for index, row in df.iterrows():
+                for column in df.columns:
+                    cell_value = row[column]
+                    colProp = dataTypeJson['tables'][tableName]['columns'][column]
+                    columnType = colProp['datatype']
+
+                    if(columnType == 'int' or columnType == 'integer'):
+                        if type(cell_value) == 'string':
+                            try:
+                                row[column] = int(cell_value)
+                            except Exception as e:
+                                print('Parsing error '+e)
+                    elif(columnType == 'float' or columnType == 'double'):
+                        if type(cell_value) == 'string' or type(cell_value) == 'int' or type(cell_value) == 'integer':
+                            try:
+                                row[column] = round(float(cell_value), 2)
+                            except Exception as e:
+                                print('Parsing error '+e)
+                    elif(colProp['isArray']):
+                        if type(cell_value) == 'string':
+                            try:
+                                row[column] = json.loads(cell_value)
+                            except Exception as e:
+                                print('Parsing error '+e)
+                    elif(colProp['isJson']):
+                        if type(cell_value) == 'string':
+                            try:
+                                row[column] = json.loads(cell_value)
+                            except Exception as e:
+                                print('Parsing error '+e)
+                    elif(colProp['isDate']):
+                        if type(cell_value) == 'string':
+                            try:
+                                row[column] =  parser.parse(cell_value)
+                            except Exception as e:
+                                print('Parsing error '+e)
+                    elif(colProp['isCategorical']):
+                        if not type(cell_value) == 'string':
+                            try:
+                                row[column] =  str(cell_value)
+                            except Exception as e:
+                                print('Parsing error '+e)
+

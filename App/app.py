@@ -81,7 +81,9 @@ if uploaded_files:
 
     metadataTable = aws_store.storeMetadataOnRDS(metadata)
 
-    st.write(metadataTable)
+    # st.write(metadataTable)
+
+    data_profiling.cleanData(dataTypeJson, files_dict)
 
     fileNames = []
 
