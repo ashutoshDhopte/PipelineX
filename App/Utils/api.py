@@ -106,7 +106,7 @@ def getDataTypes(input_json):
     some_content = f"""
         {input_json}
 
-        Above is the json data of the mulitple tables and their columns and values of their first row. Analyze the data and give the output in the form of following format.
+        Above is the json data of the mulitple tables, their columns and values of their first row. Analyze the data and give the output in the form of following format.
         And only give the output json, no other sentences and explainations, such that I can parse the output directly using json.dumps.
     
     """
@@ -153,6 +153,67 @@ def getDataTypes(input_json):
 
     return response.content
 
+
+def getJoins(input_json):
+
+    some_content = f"""
+        {input_json}
+
+        Above is the json data of the mulitple tables, their columns and unique values.
+        The 'values' here is conditional:
+            1. If the column is identifier or (is string and not categorical), then it will be first 5 values
+            2. If the column is not identifier, is string, and is categorical, then it will have all the unique values
+            3. If the columns is not identifier and is not string, then just first 5 values
+        It also has MIN_VALUE and MAX_VALUE, which will be only for the columns which are not identifier and is integer.
+        So, for the integer columns, based on the column and the min-max values, you have to find the OUTLIERS.
+        And for the string columns, based on the columns and values, you have to find the OUTLIERS within them.
+        And the main thing, find the JOIN relation between these tables and columns, in the following JSON format.
+
+        And only give the output json, no other sentences and explainations, such that I can parse the output directly using json.dumps.
+    
+    """
+
+    some_content = (
+        some_content
+        + """
+        {
+            'joins' :[
+                {
+                    'table_1': 'table_name',
+                    'table_2': 'table_name',
+                    'column_1': 'column_name_of_table_1',
+                    'column_2': 'column_name_of_table_2',
+                    'column_1_relation': 'one/many',
+                    'column_2_relation': 'one/many'
+                }
+            ],
+            'outliers':{
+                'column_1': {
+                    'isOutlier': 'false/true',
+                    'outlier_values': ['value_1', 'value_2'],
+                    'valid_min_value': 'MIN_NUMBER',
+                    'valid_max_value': 'MAX_NUMBER'
+                }
+            }
+        }
+        """
+    )
+
+    messages = [
+        SystemMessage(
+            content="You are a instruction-tuned large language model. Follow the user's instructions carefully. Respond using markdown."
+        ),
+        HumanMessage(content=some_content),
+    ]
+
+    try:
+        response = chat(messages)
+
+    except Exception as e:
+        json_str = str(e).split(" - ", 1)[1]
+        print(eval(json_str)["error"]["message"])
+
+    return response.content
 
 # if __name__ == "__main__":
 #     getDataTypes()
