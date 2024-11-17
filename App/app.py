@@ -45,7 +45,9 @@ if uploaded_files:
     datatypesResponse = api.getDataTypes(result_json)
     dataTypeJson = json.loads(datatypesResponse.strip("```json").strip("```"))
 
-    newColumnAdded = data_profiling.expandObjectValuesToColumns(files_dict, dataTypeJson)
+    newColumnAdded = data_profiling.expandObjectValuesToColumns(
+        files_dict, dataTypeJson
+    )
 
     if newColumnAdded:
         # Process the files to generate JSON
@@ -74,21 +76,23 @@ if uploaded_files:
     plotResponse = api.getPlots(dataTypeJson, joinJson)
     plotJson = json.loads(plotResponse.strip("```json").strip("```"))
 
+    st.write(plotJson)
+
     # st.write("Plot Response")
     # st.write(plotJson)
 
-    metadata = data_profiling.createMetadata(dataTypeJson, joinJson, files_dict, uploaded_files)
+    metadata = data_profiling.createMetadata(
+        dataTypeJson, joinJson, files_dict, uploaded_files
+    )
 
     metadataTable = aws_store.storeMetadataOnRDS(metadata)
 
-    # st.write(metadataTable)
-
-    data_profiling.cleanData(dataTypeJson, files_dict)
+    st.write(metadataTable)
 
     fileNames = []
 
     for tableName, df in files_dict.items():
-        df.to_csv('/tmp/'+tableName+'-transformed.csv', index=False)
-        fileNames.append(tableName+'-transformed.csv')
+        df.to_csv("/tmp/" + tableName + "-transformed.csv", index=False)
+        fileNames.append(tableName + "-transformed.csv")
 
     aws_store.putFilesToS3(fileNames)
