@@ -221,5 +221,59 @@ def getJoins(input_json):
     return response.content
 
 
+def getPlots(dataTypeJson, joinJson):
+
+    some_content = f"""
+
+        Below is the data containing all the tables, columns and respective metadata.
+        {dataTypeJson}
+
+        Below is the data containing the relations betwen the tables and columns, and the outliers values
+        {joinJson}
+
+        Analyze the above 2 json data give me the possible pair of columns using which I can plot chart in plotly.
+        Also suggest the plot type, and its business insights.
+        value_columns are the columns which are the understandable values of the foreign key column, eg. in the one-to-many relation, the 'many' column might be id, but on its original table is assigned to a understandable value such as offer_type.
+        Make sure to give the output based on the importance of the data and whether it has any business value.
+        Use the below JSON format to give the output.
+        And only give the output json, no other sentences and explainations, such that I can parse the output directly using json.dumps.
+    
+    """
+
+    some_content = (
+        some_content
+        + """
+        [
+            {
+                'table_1': 'table_name',
+                'table_2': 'table_name',
+                'column_1': 'column name of table_1',
+                'column_2': 'column name of table_2',
+                'value_column_1': 'column name which has the understandable value corresponding to the foreign key columns_1',
+                'value_column_2': 'column name which has the understandable value corresponding to the foreign key columns_2',
+                'plot_type': 'bar/chart/pie/etc.',
+                'business_insight': 'short description'
+            }
+        ]
+        """
+    )
+
+    messages = [
+        SystemMessage(
+            content="You are a instruction-tuned large language model. Follow the user's instructions carefully. Respond using markdown."
+        ),
+        HumanMessage(content=some_content),
+    ]
+
+    try:
+        response = chat(messages)
+
+    except Exception as e:
+        json_str = str(e).split(" - ", 1)[1]
+        print(eval(json_str)["error"]["message"])
+
+    return response.content
+
+
 # if __name__ == "__main__":
 #     getDataTypes()

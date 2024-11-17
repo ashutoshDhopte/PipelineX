@@ -60,8 +60,8 @@ if uploaded_files:
         datatypesResponse = api.getDataTypes(result_json)
         dataTypeJson = json.loads(datatypesResponse.strip("```json").strip("```"))
 
-    st.write("Data Type Response")
-    st.write(dataTypeJson)
+    # st.write("Data Type Response")
+    # st.write(dataTypeJson)
 
     joinsInputJson = file_upload.get_joins_input_json(files_dict, dataTypeJson)
 
@@ -69,7 +69,13 @@ if uploaded_files:
     # st.write(joinsInputJson)
 
     joinsResponse = api.getJoins(joinsInputJson)
-    joinsJson = json.loads(joinsResponse.strip("```json").strip("```"))
+    joinJson = json.loads(joinsResponse.strip("```json").strip("```"))
 
-    st.write("Join Response")
-    st.write(joinsJson)
+    # st.write("Join Response")
+    # st.write(joinJson)
+
+    plotResponse = api.getPlots(dataTypeJson, joinJson)
+    plotJson = json.loads(plotResponse.strip("```json").strip("```"))
+
+    st.write("Plot Response")
+    st.write(plotJson)
