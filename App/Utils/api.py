@@ -12,108 +12,147 @@ from pprint import pprint
 from botocore.exceptions import ClientError
 
 
-os.environ['COGNITO_CLIENT_SECRET'] = '11181idr8ho95i6k67v99p3go2sn72kri5j5qdg2lo4jl0uj9ri4'
-os.environ['COGNITO_PASSWORD'] ='Ashutosh@LLM@56'
-os.environ['COGNITO_USERNAME'] ='ashudhopte123@gmail.com'
-os.environ['COGNITO_USER_POOL_ID'] ='us-east-1_7Rq8X1q2q'
-os.environ['COGNITO_CLIENT_ID'] ='7v15em5a0iqvb3hn5r69cg3485'
+os.environ["COGNITO_CLIENT_SECRET"] = (
+    "11181idr8ho95i6k67v99p3go2sn72kri5j5qdg2lo4jl0uj9ri4"
+)
+os.environ["COGNITO_PASSWORD"] = "Ashutosh@LLM@56"
+os.environ["COGNITO_USERNAME"] = "ashudhopte123@gmail.com"
+os.environ["COGNITO_USER_POOL_ID"] = "us-east-1_7Rq8X1q2q"
+os.environ["COGNITO_CLIENT_ID"] = "7v15em5a0iqvb3hn5r69cg3485"
+
 
 def calculate_secret_hash(username, client_id, client_secret):
     message = username + client_id
     dig = hmac.new(
-        key=client_secret.encode('utf-8'),
-        msg=message.encode('utf-8'),
-        digestmod=hashlib.sha256
+        key=client_secret.encode("utf-8"),
+        msg=message.encode("utf-8"),
+        digestmod=hashlib.sha256,
     ).digest()
     return base64.b64encode(dig).decode()
+
 
 def get_cognito_token():
     try:
         # Initialize Cognito Identity Provider client
-        client = boto3.client('cognito-idp', region_name='us-east-1')
-        
+        client = boto3.client("cognito-idp", region_name="us-east-1")
+
         # Get credentials from environment variables
-        client_id = os.environ.get('COGNITO_CLIENT_ID')
-        client_secret = os.environ.get('COGNITO_CLIENT_SECRET')
-        username = os.environ.get('COGNITO_USERNAME')
-        password = os.environ.get('COGNITO_PASSWORD')
-        
+        client_id = os.environ.get("COGNITO_CLIENT_ID")
+        client_secret = os.environ.get("COGNITO_CLIENT_SECRET")
+        username = os.environ.get("COGNITO_USERNAME")
+        password = os.environ.get("COGNITO_PASSWORD")
+
         # Calculate secret hash
         secret_hash = calculate_secret_hash(username, client_id, client_secret)
-        
+
         # Initiate auth flow
         response = client.initiate_auth(
             ClientId=client_id,
-            AuthFlow='USER_PASSWORD_AUTH',
+            AuthFlow="USER_PASSWORD_AUTH",
             AuthParameters={
-                'USERNAME': username,
-                'PASSWORD': password,
-                'SECRET_HASH': secret_hash  # Use the calculated secret hash here
-            }
+                "USERNAME": username,
+                "PASSWORD": password,
+                "SECRET_HASH": secret_hash,  # Use the calculated secret hash here
+            },
         )
-        
+
         return {
             "status": 200,
-            "access_token": response['AuthenticationResult']['AccessToken']
-        }
-        
-    except ClientError as e:
-        return {
-            "status": 500,
-            "message": str(e)
+            "access_token": response["AuthenticationResult"]["AccessToken"],
         }
 
+    except ClientError as e:
+        return {"status": 500, "message": str(e)}
+
+
 litellm_proxy_endpoint = os.environ.get(
-    "litellm_proxy_endpoint",
-    "https://api-llm.ctl-gait.clientlabsaft.com"
+    "litellm_proxy_endpoint", "https://api-llm.ctl-gait.clientlabsaft.com"
 )
 temperature = 0
 max_tokens = 4096
-bearer_token=get_cognito_token()['access_token']
-x_api_key = 'Bearer sk-vECQBNrV434Z5vmW1dhg6w' 
+bearer_token = get_cognito_token()["access_token"]
+x_api_key = "Bearer sk-vECQBNrV434Z5vmW1dhg6w"
+
 
 def discoverAllModels():
 
     url = f"{litellm_proxy_endpoint}/model/info"
 
     payload = ""
-    headers = {
-        'Authorization': f'Bearer {bearer_token}',
-        'x-api-key': x_api_key 
-    }
+    headers = {"Authorization": f"Bearer {bearer_token}", "x-api-key": x_api_key}
 
-    response = requests.request("GET", url, headers=headers, data=payload, verify=True)#'cacert.pem')
+    response = requests.request(
+        "GET", url, headers=headers, data=payload, verify=True
+    )  #'cacert.pem')
 
     print(json.loads(response.text))
 
-CHOSEN_LITE_LLM_MODEL = 'Anthropic Claude-V3.5 Sonnet Vertex AI (Internal)'
+
+CHOSEN_LITE_LLM_MODEL = "Anthropic Claude-V3.5 Sonnet Vertex AI (Internal)"
 
 chat = ChatOpenAI(
-    openai_api_base=litellm_proxy_endpoint, # set openai_api_base to the LiteLLM Proxy
-    model = CHOSEN_LITE_LLM_MODEL,
-    default_headers={'x-api-key': x_api_key},
+    openai_api_base=litellm_proxy_endpoint,  # set openai_api_base to the LiteLLM Proxy
+    model=CHOSEN_LITE_LLM_MODEL,
+    default_headers={"x-api-key": x_api_key},
     temperature=temperature,
     api_key=bearer_token,
     streaming=False,
-    user=bearer_token
+    user=bearer_token,
 )
 
-def getDataTypes():
+
+def getDataTypes(input_json):
 
     some_content = f"""
+        {input_json}
+
+        Above is the json data of the mulitple tables and their columns and values of their first row. Analyze the data and give the output in the form of following format.
+        And only give the output json, no other sentences and explainations, such that I can parse the output directly using json.dumps.
+    
     """
 
+    some_content = (
+        some_content
+        + """
+            {
+            'table_name_1': [
+                {
+                    'column_name_1': {
+                        'datatype': 'value',
+                        'description': 'short description',
+                        'isIdentifier': true,
+                        'isCategorical': 'true/false, eg. age is not catgorical but offer_type is',
+                        'isDate': 'false/true',
+                        'dateFormat': 'format, eg. YYYYMMDD, MMDDYYYY, MM-DD-YYYY'
+                    }
+                }
+            ]
+        }
+        """
+    )
+
     messages = [
-        SystemMessage(content="You are a instruction-tuned large language model. Follow the user's instructions carefully. Respond using markdown."),
+        SystemMessage(
+            content="You are a instruction-tuned large language model. Follow the user's instructions carefully. Respond using markdown."
+        ),
         HumanMessage(content=some_content),
     ]
 
     try:
         response = chat(messages)
-        print(response)
+
+        # pprint(response.content)
+
+        # outputJson = response
+
+        # outputJson = json.dumps(outputJson["content"].strip("```json").strip("```"))
+
     except Exception as e:
         json_str = str(e).split(" - ", 1)[1]
-        print(eval(json_str)['error']['message'])
+        print(eval(json_str)["error"]["message"])
+
+    return response.content
+
 
 # if __name__ == "__main__":
 #     getDataTypes()

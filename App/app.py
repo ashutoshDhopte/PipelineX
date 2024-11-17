@@ -1,5 +1,5 @@
 import streamlit as st
-from Utils import file_upload
+from Utils import file_upload, api
 import json
 
 # Title for the app
@@ -16,11 +16,18 @@ uploaded_files = st.file_uploader(
 # Handle uploaded files
 if uploaded_files:
     # Process the files to generate JSON
-    result_json = file_upload.process_files_to_json(uploaded_files)
+    result_json = file_upload.process_files_to_json2(uploaded_files)
 
     # Display the JSON result in the app
-    st.write("Generated JSON:")
-    st.json(result_json)
+    st.write("Datatypes JSON:")
+
+    response = api.getDataTypes(result_json)
+
+    dataTypeJson = json.loads(response.strip("```json").strip("```"))
+
+    # st.write(json.loads(response.replace("\n", "\\n")))
+
+    # st.write()
 
     # # Optionally, download the JSON
     # json_string = json.dumps(result_json, indent=4)
