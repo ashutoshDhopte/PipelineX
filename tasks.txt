@@ -6,7 +6,7 @@ Objectives:
     a. data type enforcement (in-place)
     b. replace missing value with "unknown" for categorical or mean for quantitaive
     c. replace outliers with point b values
-4. create meta data and final csv files, and save in RDS and S3 resp.
+4. create meta data and final csv files, and save in RDS and S3 resp. -- meta data done, S3 pending
 5. Plot Api -- done
 6. Json keys to columns -- done
 
