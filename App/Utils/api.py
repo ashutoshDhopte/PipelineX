@@ -159,7 +159,7 @@ def getJoins(input_json):
     some_content = f"""
         {input_json}
 
-        Above is the json data of the mulitple tables, their columns and unique values.
+        Above is the json data of the multiple tables, their columns and unique values.
         The 'values' here is conditional:
             1. If the column is identifier or (is string and not categorical), then it will be first 5 values
             2. If the column is not identifier, is string, and is categorical, then it will have all the unique values

@@ -42,13 +42,11 @@ if uploaded_files:
     # Process the files to generate JSON
     result_json = file_upload.get_datatype_input_json(files_dict)
 
-    # Display the JSON result in the app
-    st.write("Datatypes JSON:")
+    datatypesResponse = api.getDataTypes(result_json)
 
-    response = api.getDataTypes(result_json)
-
-    dataTypeJson = json.loads(response.strip("```json").strip("```"))
+    dataTypeJson = json.loads(datatypesResponse.strip("```json").strip("```"))
 
     joinsInputJson = file_upload.get_joins_input_json(files_dict, dataTypeJson)
 
-    st.write(joinsInputJson)
+    joinsResponse = api.getJoins(joinsInputJson)
+    joinsJson = json.loads(joinsResponse.strip("```json").strip("```"))
