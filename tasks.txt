@@ -2,7 +2,7 @@ Objectives:
 
 1. Datatypes (1 API call for all tables)    (Input+Output) -- done
 2. Joins (1 API call for all tables)    (Input+Output) -- done
-3. Data cleaning
+3. Data cleaning -- done
     a. data type enforcement (in-place)
 4. create meta data and final csv files, and save in RDS and S3 resp. -- done
 5. Plot Api -- done
