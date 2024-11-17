@@ -8,3 +8,96 @@ Objectives:
     c. replace outliers with point b values
 4. create meta data and final csv files, and save in RDS and S3 resp.
 5. 
+
+
+Metadata:
+
+1. Descriptive Metadata
+Information that describes the content of the data to make it easily identifiable and searchable.
+
+Title: Name of the dataset or table.
+Description: A summary of the dataset's content and purpose.
+Keywords/Tags: Relevant terms for searching or categorizing data.
+Author/Owner: Who created or owns the data.
+Creation Date: When the data was created or collected.
+Update Date: When the data was last modified.
+2. Structural Metadata
+Details about the organization, structure, and format of the data.
+
+Schema Information:
+
+Table Names: Names of tables in the dataset.
+Column Names: Names of fields or attributes in tables.
+Data Types: Types of data stored in each column (e.g., integer, string, float, boolean).
+Relationships: Relationships between tables (e.g., one-to-one, one-to-many, many-to-many).
+File Structure:
+
+File format (e.g., CSV, JSON, XML, Parquet).
+Size of the file.
+Delimiters, encoding, and line breaks (if applicable).
+3. Administrative Metadata
+Technical details that help manage and access the dataset.
+
+Access Information:
+
+Permissions: Who can read, write, or modify the data.
+Accessibility: Whether the data is public or restricted.
+Version Control:
+
+Version number.
+Change logs or history of modifications.
+Provenance:
+
+Origin or source of the data (e.g., manual entry, API, sensor).
+Processing steps or transformations applied to the raw data.
+Identifiers:
+
+Unique identifiers for datasets (e.g., UUID, DOI).
+Primary keys in tables for data deduplication and referencing.
+4. Statistical Metadata
+Details about the content and quality of the dataset.
+
+Data Quality:
+
+Missing values: Percentage or count of missing/null entries.
+Outliers: Summary of unusual data points.
+Data accuracy: Known issues or limitations.
+Statistical Summaries:
+
+Counts, means, medians, modes.
+Standard deviations, ranges, and other summary statistics.
+Distributions:
+
+Histograms or frequency distributions for categorical and numerical data.
+5. Business Metadata
+Information that connects the dataset to its real-world application or domain.
+
+Purpose: Why the data was collected or generated.
+Target Audience: Who uses the data and for what purposes.
+Domain Information:
+Business rules or constraints (e.g., age should not exceed 120).
+Specific terminologies or definitions.
+6. Technical Metadata
+Details about the infrastructure and technical setup for the dataset.
+
+Storage Details:
+
+Location (e.g., file path, database, cloud storage).
+Backup procedures.
+Integration Information:
+
+APIs or tools used to fetch the data.
+Dependencies and integrations with other systems.
+Performance Metrics:
+
+Query performance for database datasets.
+Data refresh intervals or latency.
+7. Compliance Metadata
+Details related to governance, security, and legal considerations.
+
+Regulations:
+Compliance with standards like GDPR, HIPAA, etc.
+Anonymization:
+Steps taken to mask sensitive data.
+Licensing:
+Terms of use or distribution restrictions.
