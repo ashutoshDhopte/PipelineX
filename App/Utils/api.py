@@ -238,8 +238,9 @@ def getPlots(dataTypeJson, joinJson):
         Below is the data containing the relations betwen the tables and columns, and the outliers values
         {joinJson}
 
-        Analyze the above 2 json data give me the possible pair of columns using which I can plot chart in plotly.
+        Analyze the above 2 json data and give me the possible pair of columns using which I can plot chart in plotly.
         Also suggest the plot type, and its business insights.
+        Look at the datatypes of the columns carefully and suggest graphs that can be plotted accordinly.
         value_columns are the columns which are the understandable values of the foreign key column, eg. in the one-to-many relation, the 'many' column might be id, but on its original table is assigned to a understandable value such as offer_type.
         Make sure to give the output based on the importance of the data and whether it has any business value.
         Use the below JSON format to give the output.
@@ -258,7 +259,7 @@ def getPlots(dataTypeJson, joinJson):
                 'column_2': 'column name of table_2',
                 'value_column_1': 'column name which has the understandable value corresponding to the foreign key columns_1',
                 'value_column_2': 'column name which has the understandable value corresponding to the foreign key columns_2',
-                'plot_type': 'bar/chart/pie/etc.',
+                'plot_type': 'line/bar/pie/box/heatmap/histogram/etc.',
                 'business_insight': 'short description'
             }
         ]
