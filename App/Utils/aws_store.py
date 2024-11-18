@@ -121,7 +121,7 @@ def downloadFilesFromS3():
 #         s3.upload_file("/tmp/" + fileName, bucket_name, fileName)
 
 
-def putFilesToS3(fileNames, bucket_name):
+def putFilesToS3(fileNames):
     # Initialize the S3 client
     s3 = boto3.Session().client("s3")
 

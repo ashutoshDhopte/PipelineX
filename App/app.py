@@ -152,7 +152,7 @@ if uploaded_files and st.button("Process Data"):
 
     if done_processing:
         st.page_link("pages/plot_page.py")
-        st.page_link("pages/metadata.py")
+        st.page_link("pages/metadata_page.py")
 
 elif not uploaded_files:
     st.warning("⚠️ Please Upload at least one file for processing.")
