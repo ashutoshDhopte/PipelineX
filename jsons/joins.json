@@ -19,5 +19,6 @@
                 "valid_max_value": "MAX_NUMBER"
             }
         }
-    }
+    },
+    "description": "Detailed description about the entire dataset"
 }
