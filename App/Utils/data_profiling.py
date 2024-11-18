@@ -134,55 +134,60 @@ def createMetadata(dataTypeJson, joinJson, files_dict, uploaded_files):
 
 
 def cleanData(dataTypeJson, files_dict):
-
+    # Step 1: Remove 'Unnamed' columns from DataFrames
     for tableName, df in files_dict.items():
         files_dict[tableName] = df.loc[:, ~df.columns.str.contains("^Unnamed")]
-
+    
+    # Step 2: Process each table and its columns
     for tableName, df in files_dict.items():
         if tableName in dataTypeJson["tables"]:
+            tableConfig = dataTypeJson["tables"][tableName]
+            
+            # Iterate through each row and column in the DataFrame
             for index, row in df.iterrows():
                 for column in df.columns:
                     cell_value = row[column]
-                    colProp = dataTypeJson["tables"][tableName]["columns"][column]
-                    columnType = colProp["datatype"]
 
-                    if columnType == "int" or columnType == "integer":
-                        if type(cell_value) == "string":
-                            try:
-                                row[column] = int(cell_value)
-                            except Exception as e:
-                                print("Parsing error " + e)
-                    elif columnType == "float" or columnType == "double":
-                        if (
-                            type(cell_value) == "string"
-                            or type(cell_value) == "int"
-                            or type(cell_value) == "integer"
-                        ):
-                            try:
+                    # Get column properties from configuration
+                    colProp = tableConfig["columns"].get(column, {})
+                    columnType = colProp.get("datatype", "").lower()
+
+                    print(cell_value)
+                    print(colProp.get("isArray", False))
+
+                    try:
+                        # Integer handling
+                        if columnType in ["int", "integer"] and isinstance(cell_value, str):
+                            row[column] = int(cell_value)
+
+                        # Float handling
+                        elif columnType in ["float", "double"]:
+                            if isinstance(cell_value, (str, int, float)):
                                 row[column] = round(float(cell_value), 2)
-                            except Exception as e:
-                                print("Parsing error " + e)
-                    elif colProp["isArray"]:
-                        if type(cell_value) == "string":
-                            try:
-                                row[column] = json.loads(cell_value)
-                            except Exception as e:
-                                print("Parsing error " + e)
-                    elif colProp["isJson"]:
-                        if type(cell_value) == "string":
-                            try:
-                                row[column] = json.loads(cell_value)
-                            except Exception as e:
-                                print("Parsing error " + e)
-                    elif colProp["isDate"]:
-                        if type(cell_value) == "string":
-                            try:
-                                row[column] = parser.parse(cell_value)
-                            except Exception as e:
-                                print("Parsing error " + e)
-                    elif colProp["isCategorical"]:
-                        if not type(cell_value) == "string":
-                            try:
-                                row[column] = str(cell_value)
-                            except Exception as e:
-                                print("Parsing error " + e)
+
+                        # Array handling
+                        elif colProp.get("isArray", False) and isinstance(cell_value, str):
+                            row[column] = json.loads(cell_value)
+
+                        # JSON handling
+                        elif colProp.get("isJson", False) and isinstance(cell_value, str):
+                            row[column] = json.loads(cell_value)
+
+                        # Date handling
+                        elif colProp.get("isDate", False) and isinstance(cell_value, str):
+                            row[column] = parser.parse(cell_value)
+
+                        # Categorical handling (Convert non-string values to string)
+                        elif colProp.get("isCategorical", False) and not isinstance(cell_value, str):
+                            row[column] = str(cell_value)
+
+                    except (ValueError, json.JSONDecodeError, Exception) as e:
+                        print(f"Error parsing column '{column}' (Row {index}): {e}")
+                    
+                # Update the DataFrame with the modified row
+                df.loc[index] = row
+
+        # After processing the table, update the dictionary
+        files_dict[tableName] = df
+
+    return files_dict         

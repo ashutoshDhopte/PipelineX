@@ -109,6 +109,7 @@ def getDataTypes(input_json):
         Above is the json data of the mulitple tables, 'number_of_rows' which is not a column, rest of the key are columns and values of their first row. 
         Analyze the data and give the output in the form of following format.
         Also give purpose and target audience based on the table name, columns and the values.
+        DO NOT CHANGE THE NAME OF THE TABLES AND COLUMNS.
         And only give the output json, no other sentences and explainations, such that I can parse the output directly using json.dumps.
     
     """
@@ -177,7 +178,7 @@ def getJoins(input_json):
         And for the string columns, based on the columns and values, you have to find the OUTLIERS within them.
         The Outliers should only be mentioned if they seems serious, moderate outliers are okay.
         And the main thing, find the JOIN relation between these tables and columns, in the following JSON format.
-
+        DO NOT CHANGE THE NAME OF THE TABLES AND COLUMNS.
         And only give the output json, no other sentences and explainations, such that I can parse the output directly using json.dumps.
     
     """
@@ -244,6 +245,7 @@ def getPlots(dataTypeJson, joinJson):
         value_columns are the columns which are the understandable values of the foreign key column, eg. in the one-to-many relation, the 'many' column might be id, but on its original table is assigned to a understandable value such as offer_type.
         Make sure to give the output based on the importance of the data and whether it has any business value.
         Use the below JSON format to give the output.
+        DO NOT CHANGE THE NAME OF THE TABLES AND COLUMNS.
         And only give the output json, no other sentences and explainations, such that I can parse the output directly using json.dumps.
     
     """
