@@ -54,10 +54,10 @@ def createMetadata(dataTypeJson, joinJson, files_dict, uploaded_files):
         "FILE_INFO": {},
         "MISSING_OR_NULL_COUNT": {},
         "OUTLIERS": {},
-        "STATISTICS": {},
+        # "STATISTICS": {},
         "PURPOSE": "",
-        "TARGET_AUDIENCE": "",
-        "LINK": "",
+        "TARGET_AUDIENCE": ""
+        # "LINK": "",
     }
 
     # ATTRIBUTE                    VALUE
@@ -151,9 +151,6 @@ def cleanData(dataTypeJson, files_dict):
                     # Get column properties from configuration
                     colProp = tableConfig["columns"].get(column, {})
                     columnType = colProp.get("datatype", "").lower()
-
-                    print(cell_value)
-                    print(colProp.get("isArray", False))
 
                     try:
                         # Integer handling

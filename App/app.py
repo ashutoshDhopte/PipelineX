@@ -4,7 +4,7 @@ import json
 import pandas as pd
 
 # Title for the app
-st.title("SAAS - Data Pipeline")
+st.title("PipelineX - Team SAAS")
 
 # Description or instructions
 st.write("Upload your files here for processing!")
