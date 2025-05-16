@@ -1,6 +1,8 @@
 # Enterprise Data Transformation Pipeline Using Gen AI
 ## Team SAAS
 
+![Architecture Diagram](DataInsightPipeline.png)
+
 ## Overview
 
 This tool is designed to be a comprehensive solution for data analysis, cleaning, transformation, and generating valuable business insights. Powered by TIAA’s advanced Generative AI, this pipeline streamlines data processing, allowing you to uncover trends and relationships effortlessly.
