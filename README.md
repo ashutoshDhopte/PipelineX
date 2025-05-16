@@ -11,6 +11,12 @@ This tool is designed to be a comprehensive solution for data analysis, cleaning
 
 With this fully automated system, you can handle any type of data seamlessly. Simply provide the data, and let the pipeline do the rest. It will automatically detect relationships, outliers, and extract actionable business insights. By the end of the process, you’ll receive detailed visualizations highlighting trends and correlations between data attributes. These insights can be leveraged to drive informed business decisions and foster growth.
 
+![UI](DP1.png)
+![UI](DP2.png)
+![UI](DP3.png)
+![UI](DP4.png)
+![UI](DP5.png)
+
 ## How to get started?
 
 This application runs on Python and uses AWS S3 and RDS to store the transformed data and metadata.
